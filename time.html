@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seconds Countdown</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        #countdown {
+            font-size: 20vw;
+            font-weight: bold;
+        }
+        
+        @media (min-width: 768px) {
+            #countdown {
+                font-size: 144px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown">2332800</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const countdownEl = document.getElementById('countdown');
+            const STORAGE_KEY = 'remainingSeconds';
+            const TOTAL_SECONDS = 2332800;
+            
+            let countdownInterval;
+            let remainingSeconds;
+            
+            // Check if we have a saved value in localStorage
+            const savedSeconds = localStorage.getItem(STORAGE_KEY);
+            
+            if (savedSeconds !== null) {
+                remainingSeconds = parseInt(savedSeconds);
+                
+                // Check if countdown has already completed
+                if (remainingSeconds <= 0) {
+                    countdownEl.textContent = "0";
+                    return;
+                }
+            } else {
+                // Start from the beginning
+                remainingSeconds = TOTAL_SECONDS;
+                localStorage.setItem(STORAGE_KEY, remainingSeconds.toString());
+            }
+            
+            // Start the countdown
+            updateDisplay();
+            countdownInterval = setInterval(function() {
+                remainingSeconds--;
+                localStorage.setItem(STORAGE_KEY, remainingSeconds.toString());
+                
+                if (remainingSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownEl.textContent = "0";
+                    return;
+                }
+                
+                updateDisplay();
+            }, 1000);
+            
+            function updateDisplay() {
+                // Display without commas
+                countdownEl.textContent = remainingSeconds;
+            }
+        });
+    </script>
+</body>
+</html>
